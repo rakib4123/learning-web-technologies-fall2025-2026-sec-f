@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email</title>
+    <style>
+        #error { color: red; font-weight: bold; }
+    </style>
+    <script>
+        function validateForm() {
+            let email = document.getElementById("email").value;
+            let error = document.getElementById("error");
+            error.innerHTML = "";
+
+            if (email.trim() === "") {
+                error.innerHTML = "Email cannot be empty.";
+                return false;
+            }
+
+            let atPos = email.indexOf("@");
+            let dotPos = email.lastIndexOf(".");
+
+            if (atPos <= 0 || dotPos <= atPos + 1 || dotPos === email.length - 1) {
+                error.innerHTML = "Enter a valid email.";
+                return false;
+            }
+
+            for (let i = 0; i < email.length; i++) {
+                if (email[i] === " ") {
+                    error.innerHTML = "Email cannot contain spaces.";
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h2>Email</h2>
+    <form action="gender.html" onsubmit="return validateForm();">
+        <input type="text" id="email"><br><br>
+        <span id="error"></span><br><br>
+        <input type="submit" value="Next">
+    </form>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Degree</title>
+
+    <script>
+        function validateForm() {
+            let ds = document.getElementsByName("degree");
+            let error = document.getElementById("error");
+            error.innerHTML = "";
+
+            let ok = false;
+            for (let i = 0; i < ds.length; i++) {
+                if (ds[i].checked) { ok = true; break; }
+            }
+
+            if (!ok) {
+                error.innerHTML = "Select at least one.";
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+
+</head>
+<body>
+
+<form action="bloodgroup.html" onsubmit="return validateForm();">
+    <fieldset style="width: 200px;">
+        <legend>Degree</legend>
+
+        <input type="checkbox" name="degree" value="SSC"> SSC
+        <input type="checkbox" name="degree" value="HSC"> HSC
+        <input type="checkbox" name="degree" value="BSc"> BSc
+    </fieldset>
+
+    
+    <span id="error" style="color:red;"></span>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>

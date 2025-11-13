@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Date of Birth</title>
+
+    <script>
+        function validateForm() {
+            let dd = document.getElementById("dd").value;
+            let mm = document.getElementById("mm").value;
+            let yy = document.getElementById("yy").value;
+            let error = document.getElementById("error");
+            error.innerHTML = "";
+
+            if (dd === "" || mm === "" || yy === "") {
+                error.innerHTML = "All fields are required.";
+                return false;
+            }
+
+            let d = parseInt(dd);
+            let m = parseInt(mm);
+            let y = parseInt(yy);
+
+            if (isNaN(d) || isNaN(m) || isNaN(y)) {
+                error.innerHTML = "Must be numbers.";
+                return false;
+            }
+
+            if (d < 1 || d > 31) { error.innerHTML = "Invalid day."; return false; }
+            if (m < 1 || m > 12) { error.innerHTML = "Invalid month."; return false; }
+            if (y < 1900 || y > 2016) { error.innerHTML = "Invalid year."; return false; }
+
+            return true;
+        }
+    </script>
+
+</head>
+<body>
+
+<form action="degree.html" onsubmit="return validateForm();">
+    <fieldset style="width: 220px;">
+        <legend>Date of Birth</legend>
+
+        dd&nbsp;&nbsp;&nbsp;&nbsp;mm&nbsp;&nbsp;&nbsp;&nbsp;yyyy<br>
+
+        <input type="text" id="dd" size="3"> /
+        <input type="text" id="mm" size="3"> /
+        <input type="text" id="yy" size="5">
+
+        <br>
+        <hr>
+    </fieldset>
+
+    
+    <span id="error" style="color:red;"></span>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>

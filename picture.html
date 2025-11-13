@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Profile Picture</title>
+
+<script>
+function validateForm() {
+    let uid = document.getElementById("userId").value;
+    let pic = document.getElementById("picture").value;
+    let error = document.getElementById("error");
+    error.innerHTML = "";
+
+    if (uid.trim() === "") {
+        error.innerHTML = "User Id required.";
+        return false;
+    }
+
+    let n = parseInt(uid);
+    if (isNaN(n) || n <= 0) {
+        error.innerHTML = "Invalid User Id.";
+        return false;
+    }
+
+    if (pic === "") {
+        error.innerHTML = "Please upload a picture.";
+        return false;
+    }
+
+    return true;
+}
+</script>
+
+</head>
+<body>
+
+<form action="profile.html" onsubmit="return validateForm();">
+
+<fieldset style="width: 250px;">
+    <legend>Profile Picture</legend>
+
+    User Id<br>
+    <input type="text" id="userId"><br><br>
+
+    Picture<br>
+    <input type="file" id="picture"><br><br>
+
+    <hr>
+</fieldset>
+
+
+<span id="error" style="color:red;"></span>
+<br>
+<input type="submit" value="Submit">
+
+</form>
+
+</body>
+</html>

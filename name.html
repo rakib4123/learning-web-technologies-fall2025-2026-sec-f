@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Name</title>
+    <style>
+        #error { color: red; font-weight: bold; }
+    </style>
+    <script>
+        function isLetter(ch) {
+            return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
+        }
+        function isAllowedChar(ch) {
+            return isLetter(ch) || ch === '.' || ch === '-' || ch === ' ';
+        }
+        function validateForm() {
+            let name = document.getElementById("name").value;
+            let error = document.getElementById("error");
+            error.innerHTML = "";
+
+            if (name.trim() === "") {
+                error.innerHTML = "Name cannot be empty.";
+                return false;
+            }
+
+            let parts = name.split(" ");
+            let wordCount = 0;
+            for (let i = 0; i < parts.length; i++) {
+                if (parts[i] !== "") wordCount++;
+            }
+            if (wordCount < 2) {
+                error.innerHTML = "Name must contain at least two words.";
+                return false;
+            }
+
+            let first = 0;
+            while (first < name.length && name[first] === " ") first++;
+            if (!isLetter(name[first])) {
+                error.innerHTML = "Name must start with a letter.";
+                return false;
+            }
+
+            for (let j = 0; j < name.length; j++) {
+                if (!isAllowedChar(name[j])) {
+                    error.innerHTML = "Only letters, dot, dash and spaces allowed.";
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h2>Name</h2>
+    <form action="email.html" onsubmit="return validateForm();">
+        <input type="text" id="name"><br><br>
+        <span id="error"></span><br><br>
+        <input type="submit" value="Next">
+    </form>
+</body>
+</html>
