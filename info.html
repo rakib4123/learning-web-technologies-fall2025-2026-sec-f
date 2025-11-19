@@ -1,0 +1,228 @@
+<head>
+    <title>labTask</title>
+    <style>
+        body {
+            padding-left: 40px;
+            padding-top: 20px;
+        }
+        body, input, select, button, h1, h3, label, p, div, span {
+            font-family: sans-serif;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+ <h1>Information</h1>
+
+    <div style="margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-end;">
+        <div>
+            <label style="display: block; margin-bottom: 5px;">User Input</label>
+            <input type="text" id="labelInput" placeholder="Type Something">
+        </div>
+        <div>
+            <label style="display: block; margin-bottom: 5px;">Data Type:</label>
+            <select id="fieldType" style="height: 21px; box-sizing: content-box;">
+                <option value="">None</option>
+                <option value="name" data-type="text">1. Name</option>
+                <option value="email" data-type="email">2. Email</option>
+                <option value="phone" data-type="text">3. Phone</option>
+                <option value="student_id" data-type="text">4. Student ID</option>
+                <option value="address" data-type="text">5. Address</option>
+                <option value="dob" data-type="text">6. DOB (day/month/year)</option>
+            </select>
+        </div>
+<button id="addBtn" style="height: 25px;">Add</button>
+        <span id="topErrorMsg" style="color: red; display: none; margin-bottom: 5px;">Please select a Data Type</span>
+    </div>
+<div id="formContainer">
+        <p id="emptyState">Nothing to show.</p>
+    </div>
+    <br>
+    <button id="saveBtn" style="display:none;">Save</button>
+
+    <div id="outputContainer" style="display:none; margin-top: 20px;">
+        <h3>Saved Information:</h3>
+        <div id="outputContent"></div>
+    </div>
+
+    <script>
+        const addBtn = document.getElementById('addBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const fieldTypeSelect = document.getElementById('fieldType');
+        const labelInput = document.getElementById('labelInput');
+        const formContainer = document.getElementById('formContainer');
+        const emptyState = document.getElementById('emptyState');
+        const outputContainer = document.getElementById('outputContainer');
+        const outputContent = document.getElementById('outputContent');
+        const topErrorMsg = document.getElementById('topErrorMsg');
+
+        let fieldCount = 0;
+addBtn.addEventListener('click', () => {
+            const customLabel = labelInput.value.trim();
+            const selectedOption = fieldTypeSelect.options[fieldTypeSelect.selectedIndex];
+
+            topErrorMsg.style.display = 'none';
+
+            if (selectedOption.value === "") {
+                topErrorMsg.style.display = 'block';
+                return;
+            }
+
+            const labelText = customLabel || selectedOption.text;
+            const inputType = selectedOption.getAttribute('data-type');
+            const fieldKey = selectedOption.value;
+
+            addField(labelText, inputType, fieldKey);
+            
+            labelInput.value = '';
+            labelInput.focus();
+        });
+   function addField(label, type, key) {
+            fieldCount++;
+            emptyState.style.display = 'none';
+            saveBtn.style.display = 'block';
+            outputContainer.style.display = 'none';
+
+            const row = document.createElement('div');
+            row.style.marginBottom = "15px";
+            row.style.paddingBottom = "10px";
+            row.style.display = "flex";
+            row.style.alignItems = "center";
+            row.style.gap = "10px";
+     const labelEl = document.createElement('label');
+            labelEl.style.width = "50px";
+            labelEl.textContent = label + ":";
+
+            const inputEl = document.createElement('input');
+            inputEl.type = type;
+            inputEl.setAttribute('data-key', key);
+            inputEl.setAttribute('data-label', label);
+            inputEl.className = "dynamic-input";
+            inputEl.style.width = "250px"; 
+
+            if(key === 'phone') inputEl.placeholder = "+880...";
+            if(key === 'dob') inputEl.placeholder = "DD/MM/YYYY";
+            if(key === 'student_id') inputEl.placeholder = "Enter Student ID";
+            const errorEl = document.createElement('div');
+            errorEl.className = "error-msg";
+            errorEl.style.color = "red";
+            errorEl.style.display = "none";
+            errorEl.style.marginLeft = "10px";
+            errorEl.textContent = "Error message";
+            row.appendChild(labelEl);
+            row.appendChild(inputEl);
+            row.appendChild(errorEl);
+
+            formContainer.appendChild(row);
+        }
+
+        function isDigit(char) {
+            return char >= '0' && char <= '9';
+        }
+        function isLetter(char) {
+            return (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z');
+        }
+        saveBtn.addEventListener('click', () => {
+            const inputs = document.querySelectorAll('.dynamic-input');
+            let isValid = true;
+           const collectedData = [];
+          document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+
+            if (inputs.length === 0) return;
+
+            inputs.forEach(input => {
+                const value = input.value.trim();
+                const key = input.getAttribute('data-key');
+                const label = input.getAttribute('data-label');
+                
+                const msgEl = input.parentElement.querySelector('.error-msg');
+
+                let error = null;
+                if (!value) {
+                    error = "Required";
+                } 
+                else if (key === 'name') {
+                    for (let i = 0; i < value.length; i++) {
+                        const char = value[i];
+                        if (!isLetter(char) && char !== ' ') {
+                            error = "Only letters allowed";
+                            break;
+                        }
+                    }
+                }
+                else if (key === 'email') {
+                    if (value.indexOf('@') === -1 || value.indexOf('.') === -1) {
+                        error = "Invalid email";
+                    }
+                } 
+                else if (key === 'phone') {
+                    if (!value.startsWith('+880')) {
+                        error = "Must start with +880";
+                    } else if (value.length < 5) { 
+                        error = "Too short";
+                    } else {
+                        for (let i = 4; i < value.length; i++) {
+                            if (!isDigit(value[i])) {
+                                error = "Invalid numbers";
+                                break;
+                            }
+                        }
+                    }
+                } 
+                else if (key === 'student_id') {
+                    for(let i = 0; i < value.length; i++) {
+                        if(!isDigit(value[i])) {
+                            error = "Only numbers allowed";
+                            break;
+                        }
+                    }
+                }
+                else if (key === 'dob') {
+                    const parts = value.split('/');
+                    if (parts.length !== 3) {
+                        error = "Format: DD/MM/YYYY";
+                    } else {
+                        const day = parseInt(parts[0]);
+                        const month = parseInt(parts[1]);
+                        const year = parseInt(parts[2]);
+
+                        if (isNaN(day) || isNaN(month) || isNaN(year)) {
+                            error = "Invalid date numbers";
+                        } else if (day < 1 || day > 31) {
+                            error = "Invalid day";
+                        } else if (month < 1 || month > 12) {
+                            error = "Invalid month";
+                        } else if (year < 1900 || year > 2100) {
+                            error = "Invalid year";
+                        }
+                    }
+                }
+                if (error) {
+                    isValid = false;
+                    msgEl.textContent = error;
+                    msgEl.style.display = 'block';
+                } else {
+                    collectedData.push({ label, value });
+                }
+            });
+
+            if (isValid) {
+                displayResults(collectedData);
+            }
+        });
+
+        function displayResults(data) {
+            while (outputContent.firstChild) {
+                outputContent.removeChild(outputContent.firstChild);
+            }
+
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.textContent = `${item.label}: ${item.value}`;
+                outputContent.appendChild(div);
+            });
+            outputContainer.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
